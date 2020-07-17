@@ -1,0 +1,26 @@
+{
+  "name": "mobile_app_server",
+  "version": "1.0.0",
+  "description": "Server for health formula mobile app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markovesovic/Health-formula-mobile-app-server.git"
+  },
+  "keywords": [
+    "Health"
+  ],
+  "author": "markovesovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markovesovic/Health-formula-mobile-app-server/issues"
+  },
+  "homepage": "https://github.com/markovesovic/Health-formula-mobile-app-server#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
