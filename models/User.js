@@ -8,8 +8,7 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
     password: {
-        type: String,
-        trim: true
+        type: String
     },
     first_name: {
         type: String,
@@ -43,9 +42,10 @@ const UserSchema = new mongoose.Schema({
 
 // Delete phase linked with user when user is deleted
 UserSchema.pre('remove', async function(next){
-    await this.model('Phase').findByIdAndDelete(this.phase);
+    let id = this.getQuery().phase;
+    await this.model('Phase').findByIdAndDelete(id); // treba remove mzd
     next()
-})
+});
 
 var model = mongoose.model('User', UserSchema);
 model.collection.name = 'User';

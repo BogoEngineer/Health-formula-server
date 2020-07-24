@@ -21,7 +21,7 @@ const SupplementPlanSchema = new mongoose.Schema({
         type: [mongoose.Schema.ObjectId],
         ref: 'Supplement'
     },
-    pm_snacl: {
+    pm_snack: {
         type: [mongoose.Schema.ObjectId],
         ref: 'Supplement'
     }, 
@@ -29,7 +29,7 @@ const SupplementPlanSchema = new mongoose.Schema({
         type: [mongoose.Schema.ObjectId],
         ref: 'Supplement'
     },
-    afetr_dinner: {
+    after_dinner: {
         type: [mongoose.Schema.ObjectId],
         ref: 'Supplement'
     }
@@ -48,7 +48,7 @@ SupplementPlanSchema.pre('remove', async function(next){
         {supplement_plan: id},
         {$set: {supplement_plan: null}}
     );
-});
+}); // mozda ne treba ovo uopste
 
 var model = mongoose.model('SupplementPlan', SupplementPlanSchema);
 model.collection.name = 'SupplementPlan';
