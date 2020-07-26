@@ -1,33 +1,31 @@
-// Creating and exporting model schemas
+'use strict';
 
-const mongoose = require('mongoose');
-const fs = require('fs');
+const url = require('url');
 const path = require('path');
+const fs = require('fs');
+const Mongoose = require('mongoose');
+const { mongooseOptions } = require('../config');
 
-const {
-  CONNECTION_STRING
-} = process.env;
+const { DATABASE_URL } = process.env;
+
+// Connecting to mongoDB
+
+Mongoose.connect(DATABASE_URL, mongooseOptions, (err) => {
+    console.log(err);
+});
 
 
-/**mongoose.connect(CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-  }
-);**/
-
+// Adding models to common export for dir
 const basename = path.basename(__filename);
-var db = {}
-
+var database = {};
 fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    var model = require(path.join(__dirname,file));
-    db[model.name] = model;
-  });
+    .readdirSync(__dirname)
+    .filter(file => {
+        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+    })
+    .forEach(file => {
+        var model = require('./' + file.split('.')[0]);
+        database[model.collection.name] = model;
+    });
 
-module.exports = db;
+module.exports = database;
