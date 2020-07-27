@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const { catchErrors } = require('../utils/errors');
 
 const {
@@ -21,7 +20,7 @@ const {
     deleteFoodItem,
     deleteMealPlan,
     deleteSupplement
-} = require('../controllers/adminController.js')
+} = require('../controllers').adminController;
 
 router.route('/users')
     .get(catchErrors(getAllUsers))

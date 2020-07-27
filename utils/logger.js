@@ -1,0 +1,1 @@
+// Implement universal logger

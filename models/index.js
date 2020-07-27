@@ -9,9 +9,12 @@ const { mongooseOptions } = require('../config');
 const { DATABASE_URL } = process.env;
 
 // Connecting to mongoDB
-
 Mongoose.connect(DATABASE_URL, mongooseOptions, (err) => {
-    console.log(err);
+    if(err !== null) {
+        console.log(err);
+    } else {
+        console.log("Successfully connected to database!\n");
+    }
 });
 
 

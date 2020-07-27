@@ -1,6 +1,9 @@
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
+
+const router = require('./routes');
+
 //const MongoStore = require('connect-mongo')(session);
 const path = require('path');
 //const cookieParser = require('cookie-parser');
@@ -18,13 +21,12 @@ const app = express();
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Route files
-const admin = require('./routes/admin.js');
 
 app.use(express.json());
 
 // Mount routers
-app.use('/admin', admin);
+app.use('/admin', router.admin);
+app.use('/user', router.user)
 
 // Otherwise this was a really bad error we didn't expect! Shoot eh
 if (app.get('env') === 'development') {
@@ -35,6 +37,6 @@ if (app.get('env') === 'development') {
 // production error handler
 app.use(errorHandlers.productionErrors);
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-const server = app.listen(PORT, console.log(`Server is listening on port: ${PORT}`));
+const server = app.listen(port, console.log(`Server is listening on port: ${port}`));
