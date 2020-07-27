@@ -23,8 +23,8 @@ const SupplementSchema = new mongoose.Schema({
 
 // Delete every reference to supplement that is going to be removed  (from supplement plan)
 SupplementSchema.pre('remove', async function(next){
-    let id = this.getQuery()._id;
-    await this.model('SupplementPlan').update({},
+    let id = this._id;
+    await this.model('SupplementPlan').updateMany({},
         { $pull: { 
                 before_breakfast: id, 
                 after_breakfast: id, 

@@ -25,36 +25,44 @@ const {
 
 router.route('/users')
     .get(catchErrors(getAllUsers))
-    .post(catchErrors(createNewUser))
+    .post(catchErrors(createNewUser));
+
+router.route('/users/:id')
     .delete(catchErrors(deleteUser))
     .put(catchErrors(updateUser));
 
-router.route('foodchoices')
+router.route('/foodchoices')
     .get(catchErrors(getAllFoodChoices))
     .post(catchErrors(createNewFoodChoice));
 
-router.route('fooditems')
+router.route('/fooditems')
     .get(catchErrors(getAllFoodItems))
-    .post(catchErrors(createNewFoodItem))
-    .delete(catchErrors(deleteFoodItem))
+    .post(catchErrors(createNewFoodItem));
 
-router.route('phases')
-    .post(catchErrors(createNewPhase))
+router.route('/fooditems/:id')
+    .delete(catchErrors(deleteFoodItem));
 
-router.route('mealplans')
+router.route('/phases')
+    .post(catchErrors(createNewPhase));
+
+router.route('/mealplans')
     .get(catchErrors(getAllMealPlans))
-    .post(catchErrors(createNewMealPlan))
-    .delete(catchErrors(deleteMealPlan))
+    .post(catchErrors(createNewMealPlan));
 
-router.route('supplements')
+router.route('/mealplans/:id')
+    .delete(catchErrors(deleteMealPlan));
+
+router.route('/supplements')
     .get(catchErrors(getAllSupplements))
-    .post(catchErrors(createNewSupplement))
+    .post(catchErrors(createNewSupplement));
+
+router.route('/supplements/:id')
     .delete(catchErrors(deleteSupplement));
 
-router.route('supplementplans')
-    .post(catchErrors(createNewSupplementPlan))
+router.route('/supplementplans')
+    .post(catchErrors(createNewSupplementPlan));
 
-router.route('posts')
+router.route('/posts')
     .post(catchErrors(createNewPost));
 
 module.exports = router;

@@ -9,25 +9,31 @@ exports.getAllUsers = async(req,res) => {
         model: 'Phase',
         populate : {
           path : 'supplement_plan',
-          model: 'SupplementPlan'
-        },
+          model: 'SupplementPlan',
+          populate : {
+            path : 'before_breakfast after_breakfast am_snack before_lunch after_lunch pm_snack before_dinner after_dinner',
+            model: 'Supplement'  
+          }
+        }
+    }).populate({
+        path: 'phase',
+        model: 'Phase',
         populate : {
             path : 'food_choice',
             model: 'FoodChoice',
             populate : {
-                path : 'allowed',
-                model: 'FoodItem'
-            },
-            populate : {
-                path : 'not_allowed',
+                path : 'allowed not_allowed',
                 model: 'FoodItem'
             }
-        },
+        }
+    }).populate({
+        path : 'phase',
+        model: 'Phase',
         populate : {
             path : 'meal_plan',
             model: 'MealPlan'
         }
-    })
+    });
     res.status(200).json({
         success: true,
         data: users
@@ -68,6 +74,7 @@ exports.getAllFoodItems = async(req,res) => {
 
 exports.createNewUser = async(req,res) => {
     let user_data = req.body;
+    user_data.date_created = Date.now();
     let user = await db.User.create(user_data);
     res.status(201).json({
         success: true,
@@ -172,7 +179,7 @@ exports.deleteFoodItem = async(req,res) => {
 
 exports.updateUser = async(req,res) => {
     let user_id = req.params.id;
-    let phase_id = req.params.body;
+    let phase_id = req.body.id;
     let user = await db.User.findByIdAndUpdate(user_id, {
         phase: phase_id
     });

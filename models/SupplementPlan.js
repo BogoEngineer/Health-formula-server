@@ -43,8 +43,8 @@ const SupplementPlanSchema = new mongoose.Schema({
 
 // Delete every reference to supplement plan that is going to be removed  (from phase)
 SupplementPlanSchema.pre('remove', async function(next){
-    let id = this.getQuery()._id;
-    await this.model('Phase').update(
+    let id = this._id;
+    await this.model('Phase').updateMany(
         {supplement_plan: id},
         {$set: {supplement_plan: null}}
     );

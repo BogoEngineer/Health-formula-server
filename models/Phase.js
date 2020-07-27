@@ -30,7 +30,7 @@ const PhaseSchema = new mongoose.Schema({
 
 // Delete phase linked with user when user is deleted
 PhaseSchema.pre('remove', async function(next){
-    let id = this.getQuery().supplement_plan;
+    let id = this.supplement_plan;
     await this.model('SupplementPlan').findByIdAndDelete(id); // mora remove, mozda ne
     next();
 });

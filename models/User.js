@@ -19,8 +19,7 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
     date_created: {
-        type: Date,
-        required: 'Date is required.'
+        type: Date
     },
     phase: {
         type: mongoose.Schema.ObjectId,
@@ -42,7 +41,7 @@ const UserSchema = new mongoose.Schema({
 
 // Delete phase linked with user when user is deleted
 UserSchema.pre('remove', async function(next){
-    let id = this.getQuery().phase;
+    let id = this.phase;
     await this.model('Phase').findByIdAndDelete(id); // treba remove mzd
     next()
 });

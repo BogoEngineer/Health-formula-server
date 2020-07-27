@@ -16,8 +16,8 @@ const MealPlanSchema = new mongoose.Schema({
 
 // Delete every reference to meal plan that is going to be removed  (from phase)
 MealPlanSchema.pre('remove', async function(next){
-    let id = this.getQuery()._id;
-    await this.model('Phase').update(
+    let id = this._id;
+    await this.model('Phase').updateMany(
         {meal_plan: id},
         {$set: {meal_plan: null}}
     );
