@@ -22,38 +22,38 @@ const {
     deleteSupplement
 } = require('../controllers').adminController;
 
-router.route('users')
+router.route('/users')
     .get(catchErrors(getAllUsers))
     .post(catchErrors(createNewUser))
     .delete(catchErrors(deleteUser))
     .put(catchErrors(updateUser));
 
-router.route('foodchoices')
+router.route('/foodchoices')
     .get(catchErrors(getAllFoodChoices))
     .post(catchErrors(createNewFoodChoice));
 
-router.route('fooditems')
+router.route('/fooditems')
     .get(catchErrors(getAllFoodItems))
     .post(catchErrors(createNewFoodItem))
     .delete(catchErrors(deleteFoodItem))
 
-router.route('phases')
+router.route('/phases')
     .post(catchErrors(createNewPhase))
 
-router.route('mealplans')
+router.route('/mealplans')
     .get(catchErrors(getAllMealPlans))
     .post(catchErrors(createNewMealPlan))
     .delete(catchErrors(deleteMealPlan))
 
-router.route('supplements')
+router.route('/supplements')
     .get(catchErrors(getAllSupplements))
     .post(catchErrors(createNewSupplement))
     .delete(catchErrors(deleteSupplement));
 
-router.route('supplementplans')
+router.route('/supplementplans')
     .post(catchErrors(createNewSupplementPlan))
 
-router.route('posts')
+router.route('/posts')
     .post(catchErrors(createNewPost));
 
 module.exports = router;

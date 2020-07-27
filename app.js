@@ -25,7 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 // Mount routers
-app.use('/', router);
+app.use('/admin', router.admin);
+app.use('/user', router.user)
 
 // Otherwise this was a really bad error we didn't expect! Shoot eh
 if (app.get('env') === 'development') {
@@ -36,6 +37,6 @@ if (app.get('env') === 'development') {
 // production error handler
 app.use(errorHandlers.productionErrors);
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-const server = app.listen(PORT, console.log(`Server is listening on port: ${PORT}`));
+const server = app.listen(port, console.log(`Server is listening on port: ${port}`));
