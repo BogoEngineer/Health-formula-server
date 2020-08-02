@@ -19,7 +19,8 @@ const FoodItemSchema = new mongoose.Schema({
 
 // Delete every reference to food item that is going to be removed  (from food choice)
 FoodItemSchema.pre('remove', async function(next){
-    let id = this.getQuery()._id;
+    let id = this._id;
+    console.log(id);
     await this.model('FoodChoice').updateMany({},
         { $pull: { 
                 allowed: id,

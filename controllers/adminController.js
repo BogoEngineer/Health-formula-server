@@ -169,9 +169,18 @@ exports.deleteSupplement = async(req,res) => {
         data: supplement
     })}
 
+exports.deleteFoodChoice = async(req,res) => {
+    let food_choice_id = req.params.id;
+    let food_choice = await db.FoodChoice.findById(food_choice_id);
+    food_choice.remove();
+    res.status(200).json({
+        success: true,
+        data: food_choice
+    })}
+
 exports.deleteFoodItem = async(req,res) => {
     let food_item_id = req.params.id;
-    let food_item = await db.User.findById(food_item_id);
+    let food_item = await db.FoodItem.findById(food_item_id);
     food_item.remove();
     res.status(200).json({
         success: true,
@@ -181,9 +190,10 @@ exports.deleteFoodItem = async(req,res) => {
 exports.updateUser = async(req,res) => {
     let user_id = req.params.id;
     let phase_id = req.body.id;
-    let user = await db.User.findByIdAndUpdate(user_id, {
-        phase: phase_id
-    });
+    let user = await db.User.findOne({_id: user_id})
+    user.discard = user.phase;
+    user.phase = phase_id;
+    user.save();
     res.status(200).json({
         success: true,
         data: user

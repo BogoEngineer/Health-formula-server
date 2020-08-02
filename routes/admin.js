@@ -19,7 +19,8 @@ const {
     deleteUser,
     deleteFoodItem,
     deleteMealPlan,
-    deleteSupplement
+    deleteSupplement,
+    deleteFoodChoice
 } = require('../controllers').adminController;
 
 router.route('/users')
@@ -33,6 +34,9 @@ router.route('/users/:id')
 router.route('/foodchoices')
     .get(catchErrors(getAllFoodChoices))
     .post(catchErrors(createNewFoodChoice));
+
+router.route('/foodchoices/:id')
+    .delete(catchErrors(deleteFoodChoice))
 
 router.route('/fooditems')
     .get(catchErrors(getAllFoodItems))

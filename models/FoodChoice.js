@@ -22,7 +22,7 @@ const FoodChoiceSchema = new mongoose.Schema({
 
 // Delete every reference to food choice that is going to be removed  (from phase)
 FoodChoiceSchema.pre('remove', async function(next){
-    let id = this.getQuery()._id;
+    let id = this._id;
     await this.model('Phase').updateMany(
         {food_choice: id},
         {$set: {food_choice: null}}

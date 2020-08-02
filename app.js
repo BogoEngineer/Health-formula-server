@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const router = require('./routes');
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(express.json());
+app.use(cors());
 
 // Mount routers
 app.use('/admin', router.admin);
