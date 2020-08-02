@@ -13,24 +13,30 @@ async function getUserInfo(req, res, next) {
                             .User
                             .findById(user_id)
                             .populate({
+                                path : 'phase',
+                                model: 'Phase',
+                                populate : {
+                                  path : 'supplement_plan',
+                                  model: 'SupplementPlan',
+                                  populate : {
+                                    path : 'before_breakfast after_breakfast am_snack before_lunch after_lunch pm_snack before_dinner after_dinner',
+                                    model: 'Supplement'  
+                                  }
+                                }
+                            }).populate({
                                 path: 'phase',
                                 model: 'Phase',
-                                populate: {
-                                    path: 'supplement_plan',
-                                    model: 'Supplement plan',
-                                },
                                 populate : {
                                     path : 'food_choice',
                                     model: 'FoodChoice',
                                     populate : {
-                                        path : 'allowed',
-                                        model: 'FoodItem'
-                                    },
-                                    populate : {
-                                        path : 'not_allowed',
+                                        path : 'allowed not_allowed',
                                         model: 'FoodItem'
                                     }
-                                },
+                                }
+                            }).populate({
+                                path : 'phase',
+                                model: 'Phase',
                                 populate : {
                                     path : 'meal_plan',
                                     model: 'MealPlan'
