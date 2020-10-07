@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const passport = require('passport');
+
 const { catchErrors } = require('../utils/errors');
 
 const {
@@ -20,52 +22,57 @@ const {
     deleteFoodItem,
     deleteMealPlan,
     deleteSupplement,
-    deleteFoodChoice
+    deleteFoodChoice,
+    authenticate
 } = require('../controllers').adminController;
 
 router.route('/users')
-    .get(catchErrors(getAllUsers))
-    .post(catchErrors(createNewUser));
+    .get(passport.authenticate('jwt', {session: false}), catchErrors(getAllUsers))
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewUser));
 
 router.route('/users/:id')
-    .delete(catchErrors(deleteUser))
-    .put(catchErrors(updateUser));
+    .delete(passport.authenticate('jwt', {session: false}), catchErrors(deleteUser))
+    .put(passport.authenticate('jwt', {session: false}), catchErrors(updateUser));
 
 router.route('/foodchoices')
-    .get(catchErrors(getAllFoodChoices))
-    .post(catchErrors(createNewFoodChoice));
+    .get(passport.authenticate('jwt', {session: false}), catchErrors(getAllFoodChoices))
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewFoodChoice));
 
 router.route('/foodchoices/:id')
-    .delete(catchErrors(deleteFoodChoice))
+    .delete(passport.authenticate('jwt', {session: false}), catchErrors(deleteFoodChoice))
 
 router.route('/fooditems')
-    .get(catchErrors(getAllFoodItems))
-    .post(catchErrors(createNewFoodItem));
+    .get(passport.authenticate('jwt', {session: false}), catchErrors(getAllFoodItems))
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewFoodItem));
 
 router.route('/fooditems/:id')
-    .delete(catchErrors(deleteFoodItem));
+    .delete(passport.authenticate('jwt', {session: false}), catchErrors(deleteFoodItem));
 
 router.route('/phases')
-    .post(catchErrors(createNewPhase));
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewPhase));
 
 router.route('/mealplans')
-    .get(catchErrors(getAllMealPlans))
-    .post(catchErrors(createNewMealPlan));
+    .get(passport.authenticate('jwt', {session: false}), catchErrors(getAllMealPlans))
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewMealPlan));
 
 router.route('/mealplans/:id')
-    .delete(catchErrors(deleteMealPlan));
+    .delete(passport.authenticate('jwt', {session: false}), catchErrors(deleteMealPlan));
 
 router.route('/supplements')
-    .get(catchErrors(getAllSupplements))
-    .post(catchErrors(createNewSupplement));
+    .get(passport.authenticate('jwt', {session: false}), catchErrors(getAllSupplements))
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewSupplement));
 
 router.route('/supplements/:id')
-    .delete(catchErrors(deleteSupplement));
+    .delete(passport.authenticate('jwt', {session: false}), catchErrors(deleteSupplement));
 
 router.route('/supplementplans')
-    .post(catchErrors(createNewSupplementPlan));
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewSupplementPlan));
 
 router.route('/posts')
-    .post(catchErrors(createNewPost));
+    .post(passport.authenticate('jwt', {session: false}), catchErrors(createNewPost));
+
+
+router.route('/authenticate')
+    .post(catchErrors(authenticate))
 
 module.exports = router;

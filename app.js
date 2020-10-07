@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const bodyParser = require('body-parser');
 const router = require('./routes');
 
 //const MongoStore = require('connect-mongo')(session);
@@ -22,9 +22,21 @@ const app = express();
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Body Parser Middleware
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 
 app.use(express.json());
 app.use(cors());
+
+// Passport initialize
+app.use(passport.initialize());
+app.use(passport.session())
+
+require('./config/passport')(passport)
 
 // Mount routers
 app.use('/admin', router.admin);

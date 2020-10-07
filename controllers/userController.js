@@ -1,10 +1,16 @@
 'use strict';
 
 const db = require('../models');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const config = require('../config/index');
 
 module.exports = {
     getUserInfo,
     getAllPosts,
+    getAllSupplements,
+    authenticate
 }
 
 async function getUserInfo(req, res, next) {
@@ -54,4 +60,46 @@ async function getAllPosts(req, res, next) {
         success: true,
         data: allPost,
     });
+}
+
+async function getAllSupplements(req,res) {
+    let supplements = await db.Supplement.find();
+    res.status(200).json({
+        success: true,
+        data: supplements
+    })
+}
+
+async function authenticate(req, res, next){
+    const email = req.body.email;
+    const password = req.body.password;
+
+
+    const user = await db.User.findOne({email: email})
+
+    if(user == null){
+        return res.json({success: false, msg: "There is no user with given email"})
+    }
+
+    bcrypt.compare(password, user.password, (err, isMatch)=>{
+        if(err) {
+            res.json({ success: false, msg: 'Couldn`t login' });
+        }
+        else if(isMatch){
+            // const token = jwt.sign({data: user}, config.secret, {
+            //     expiresIn: 604800 // 1 week
+            // })
+            const token = jwt.sign({ data: user }, config.secret, {
+                expiresIn: 604800 // 1 week
+              });
+            user.password = ""
+            res.json({
+                success: true,
+                token: `Bearer ${token}`,
+                userId: user._id
+              });
+            } else {
+              return res.json({ success: false, msg: 'Wrong password' });
+            }
+    })
 }

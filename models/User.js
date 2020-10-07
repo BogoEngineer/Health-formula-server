@@ -26,8 +26,7 @@ const UserSchema = new mongoose.Schema({
         ref: 'Phase'
     },
     profile_picture: { 
-        data: Buffer, 
-        contentType: String 
+        type: String
     },
     admin: {
         type: Boolean,
@@ -50,7 +49,7 @@ UserSchema.pre('remove', async function(next){
 UserSchema.pre('save', async function(next){
     let id = this.discard;
     let phase = await this.model('Phase').findById(id);
-    phase.remove()
+    if(phase!= null) phase.remove()
     next();
 })
 

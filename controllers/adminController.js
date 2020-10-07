@@ -1,6 +1,10 @@
 'use strict';
 const db = require('../models');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const config = require('../config/index');
 
 exports.getAllUsers = async(req,res) => {
     let users = await db.User.find({
@@ -76,11 +80,16 @@ exports.getAllFoodItems = async(req,res) => {
 exports.createNewUser = async(req,res) => {
     let user_data = req.body;
     user_data.date_created = Date.now();
-    let user = await db.User.create(user_data);
-    res.status(201).json({
-        success: true,
-        data: user
-    })}
+    let user = new db.User(user_data);
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(user.password, salt, (err, hash) => {
+            if(err) res.json({ success: false, msg: 'Failed to register user' });
+            user.password = hash;
+            user.save();
+            res.json({success: true, data: user})
+            });
+    });
+}
 
 exports.createNewPhase = async(req,res) => {
     let phase_data = req.body;
@@ -197,6 +206,40 @@ exports.updateUser = async(req,res) => {
     res.status(200).json({
         success: true,
         data: user
-    })}
+    })
+}
+
+exports.authenticate = async(req, res, next)=>{
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await db.User.findOne({email: email, admin:true})
+
+    if(user == null){
+        return res.json({success: "false", msg: "There is no user with given email"})
+    }
+
+    bcrypt.compare(password, user.password, (err, isMatch)=>{
+        if(err) {
+            res.json({ success: false, msg: 'Couldn`t login' });
+        }
+        else if(isMatch){
+            // const token = jwt.sign({data: user}, config.secret, {
+            //     expiresIn: 604800 // 1 week
+            // })
+            const token = jwt.sign({ data: user }, config.secret, {
+                expiresIn: 604800 // 1 week
+              });
+            user.password = ""
+            res.json({
+                success: true,
+                token: `Bearer ${token}`,
+                user: user
+              });
+            } else {
+              return res.json({ success: false, msg: 'Wrong password' });
+            }
+    })
+}
 
 
