@@ -4,13 +4,16 @@ const db = require('../models');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const nodemailer = require("nodemailer");
 const config = require('../config/index');
 
 module.exports = {
     getUserInfo,
     getAllPosts,
     getAllSupplements,
-    authenticate
+    authenticate,
+    changePassword,
+    forgotPassword
 }
 
 async function getUserInfo(req, res, next) {
@@ -102,4 +105,74 @@ async function authenticate(req, res, next){
               return res.json({ success: false, msg: 'Wrong password' });
             }
     })
+}
+
+async function changePassword(req, res, next){
+    let old_password = req.body.old_password
+    let new_password = req.body.new_password
+    let email = req.body.email
+
+    const user = await db.User.findOne({email: email})
+
+    bcrypt.compare(old_password, user.password, (err, isMatch)=>{
+        if(err) {
+            res.json({ success: false, msg: 'Couldn`t change password' });
+        }
+        else if(isMatch){
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(new_password, salt, (err, hash) => {
+                    if(err) res.json({ success: false, msg: 'Failed to change password' });
+                    user.password = hash;
+                    user.save();
+                    res.json({success: true, msg: 'Password successfully changed'})
+                    });
+            });
+            } else {
+              return res.json({ success: false, msg: 'Old password doesn`t match' });
+            }
+    })
+}
+
+async function forgotPassword(req, res, next){
+    let user_email = req.params.email
+
+    let user = await db.User.findOne({email: user_email})
+
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'peter.smith.throwaway@gmail.com',
+            pass: 'petersmith14'
+        },
+    });
+
+    let new_password = Math.round((Math.random()+1)*10000).toString()
+
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(new_password, salt, (err, hash) => {
+            if(err) res.json({ success: false, msg: 'Failed to reset password' });
+            else{
+                user.password = hash;
+                user.save();
+                res.json({success: true, data: user})
+            }
+            });
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"Health app" <peter.smith.throwaway@gmail.com>', // sender address
+        to: user_email, // list of receivers
+        subject: "Reset password", // Subject line
+        text: `Your new password is ${new_password}. We recommend in-app changing password.`,
+    }, function (error, info) {
+        if (error) {
+            console.log("sendmail" + error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+
+
 }

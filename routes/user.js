@@ -8,12 +8,16 @@ const {
     getAllPosts,
     getUserInfo,
     getAllSupplements,
-    authenticate
+    authenticate,
+    changePassword,
+    forgotPassword
  } = require('../controllers').userController;
 
 router.get('/info/:id', passport.authenticate('jwt', {session: false}), catchErrors(getUserInfo));
-router.get('/posts', passport.authenticate('jwt', {session: false}), catchErrors(getAllPosts));
-router.get('/supplements', passport.authenticate('jwt', {session: false}), catchErrors(getAllSupplements));
+router.get('/posts', catchErrors(getAllPosts));
+router.get('/supplements', catchErrors(getAllSupplements));
 router.post('/authenticate', catchErrors(authenticate))
+router.post('/changePassword', passport.authenticate('jwt', {session: false}), catchErrors(changePassword))
+router.get('/forgotPassword/:email', forgotPassword)
 
 module.exports = router;
